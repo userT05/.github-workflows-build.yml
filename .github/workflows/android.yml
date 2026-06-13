@@ -14,20 +14,23 @@ jobs:
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
 
     - name: Set up Java 17 Environment
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '17' # هنا التعديل الحاسم
+        java-version: '17'
 
     - name: Change Android Gradle Permissions
       run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew assembleDebug
+    - name: Clean and Build with Gradle
+      run: ./gradlew clean assembleDebug --no-daemon
 
     - name: Upload Finished APK
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: DroidFS-Fix-APK
